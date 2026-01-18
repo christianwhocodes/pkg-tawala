@@ -13,7 +13,7 @@ from christianwhocodes.generators.file import (
 from django.core.management.base import BaseCommand, CommandParser
 
 from .... import PKG_DISPLAY_NAME, PKG_NAME, Conf
-from ....settings import FILE_GENERATOR_PATHS, USE_ASGI
+from ....settings import FILE_GENERATOR_PATHS, RUNCOMMANDS
 
 
 class FileOption(StrEnum):
@@ -38,7 +38,7 @@ class EnvFileGenerator(FileGenerator):
     def file_path(self) -> pathlib.Path:
         """Return the path for the .env.example file."""
         paths_config = FILE_GENERATOR_PATHS
-        return paths_config.env
+        return paths_config.dotenv_example
 
     @property
     def data(self) -> str:
@@ -202,26 +202,21 @@ class EnvFileGenerator(FileGenerator):
 
 class APIFileGenerator(FileGenerator):
     f"""
-    Generator for api ASGI / WSGI configuration file (api/asgi or api/wsgi.py).
+    Generator for ASGI / WSGI configuration in api/main.py file.
     
-    Creates an asgi.py or wsgi.py file in the /api directory.
+    Creates an main.py file in the /api directory.
     Required for running {PKG_DISPLAY_NAME} apps with ASGI or WSGI servers.
-    The type of file dependes on the USE_ASGI setting
-    If USE_ASGI is True, an asgi.py file is created; otherwise, a wsgi.py file is created.
+    Note that the type of api gateway dependes on the USE_ASGI setting.
     """
 
     @property
     def file_path(self) -> pathlib.Path:
-        """Return the path for the asgi.py"""
-        paths_config = FILE_GENERATOR_PATHS
-        if USE_ASGI:
-            return paths_config.asgi
-        else:
-            return paths_config.wsgi
+        """Return the path for the api/main.py"""
+        return FILE_GENERATOR_PATHS.api_main_py
 
     @property
     def data(self) -> str:
-        """Return template content for asgi.py / wsgi.py."""
+        """Return template content for api/main.py."""
         return f"from {PKG_NAME}.api.backends.gateway import application\n\napp = application\n"
 
 
@@ -237,24 +232,37 @@ class VercelFileGenerator(FileGenerator):
     def file_path(self) -> pathlib.Path:
         """Return the path for the vercel.json."""
         paths_config = FILE_GENERATOR_PATHS
-        return paths_config.vercel
+        return paths_config.vercel_json
 
     @property
     def data(self) -> str:
         """Return template content for vercel.json."""
-        return (
-            "{\n"
-            '  "$schema": "https://openapi.vercel.sh/vercel.json",\n'
-            f'  "installCommand": "uv run {PKG_NAME} runinstall",\n'
-            f'  "buildCommand": "uv run {PKG_NAME} runbuild",\n'
-            '  "rewrites": [\n'
-            "    {\n"
-            '      "source": "/(.*)",\n'
-            f'      "destination": "/api/{"a" if USE_ASGI else "w"}sgi"\n'
-            "    }\n"
-            "  ]\n"
-            "}\n"
+        lines = [
+            "{",
+            '  "$schema": "https://openapi.vercel.sh/vercel.json",',
+        ]
+
+        # Add installCommand only if RUNCOMMANDS.install is non-empty
+        if RUNCOMMANDS.install:
+            lines.append(f'  "installCommand": "uv run {PKG_NAME} runinstall",')
+
+        # Add buildCommand only if RUNCOMMANDS.build is non-empty
+        if RUNCOMMANDS.build:
+            lines.append(f'  "buildCommand": "uv run {PKG_NAME} runbuild",')
+
+        lines.extend(
+            [
+                '  "rewrites": [',
+                "    {",
+                '      "source": "/(.*)",',
+                '      "destination": "/api/main"',
+                "    }",
+                "  ]",
+                "}",
+            ]
         )
+
+        return "\n".join(lines) + "\n"
 
 
 class Command(BaseCommand):

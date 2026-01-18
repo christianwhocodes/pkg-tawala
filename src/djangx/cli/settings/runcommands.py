@@ -7,18 +7,12 @@ class RunCommandsConf(Conf):
     install = ConfField(
         env="RUNCOMMANDS_INSTALL",
         toml="runcommands.install",
-        default=["tailwind -i --use-cache"],
         type=list,
     )
     build = ConfField(
         env="RUNCOMMANDS_BUILD",
         toml="runcommands.build",
-        default=[
-            "makemigrations",
-            "migrate",
-            "tailwind -b",
-            "collectstatic --noinput",
-        ],
+        default=["makemigrations", "migrate", "collectstatic --noinput"],
         type=list,
     )
 

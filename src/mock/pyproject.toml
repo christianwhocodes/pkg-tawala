@@ -1,5 +1,5 @@
 [project]
-name = "djangx-app"
+name = "tawala-app"
 version = "0.1.0"
 description = ""
 readme = "README.md"
@@ -7,7 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "pillow>=12.1.0",
     "psycopg[binary,pool]>=3.3.2",
-    "djangx>=1.6.0.dev1",
+    "tawala>=1.5.4",
     "vercel>=0.3.7",
 ]
 
@@ -18,4 +18,4 @@ dev = ["djlint>=1.36.4"]
 blank_line_before_tag = "block"
 blank_line_after_tag = "load,extends,endblock"
 
-[tool.djangx]
+[tool.tawala]

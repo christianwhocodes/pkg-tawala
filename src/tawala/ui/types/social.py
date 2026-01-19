@@ -9,5 +9,4 @@ SocialKey: TypeAlias = Literal[
     "youtube",
 ]
 
-
 __all__: list[str] = ["SocialKey"]

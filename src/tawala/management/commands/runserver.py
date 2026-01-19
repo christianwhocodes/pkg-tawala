@@ -15,8 +15,8 @@ from django.utils import timezone
 from pyperclip import copy
 
 from ... import PKG_DISPLAY_NAME, PKG_NAME
-from ..helpers.art import ArtPrinter
 from ..settings import TAILWIND
+from .helpers.art import ArtPrinter
 from .tailwind import BuildHandler, CleanHandler, WatchHandler
 
 
@@ -83,7 +83,7 @@ class Command(RunserverCommand):
         or starting the watcher (which builds initially then watches).
         """
         self._prepare_tailwind()
-        return super().inner_run(*args, **options)
+        return super().inner_run(*args, **options)  # pyright: ignore[reportUnknownVariableType, reportUnknownMemberType, reportAttributeAccessIssue]
 
     def check_migrations(self) -> None:
         f"""Check for unapplied migrations and display a warning.
@@ -101,7 +101,7 @@ class Command(RunserverCommand):
 
         plan = executor.migration_plan(executor.loader.graph.leaf_nodes())
         if plan:
-            apps_waiting_migration = sorted({migration.app_label for migration, backwards in plan})
+            apps_waiting_migration = sorted({migration.app_label for migration, backwards in plan})  # pyright: ignore[reportUnusedVariable]
             self.stdout.write(
                 self.style.NOTICE(
                     "\nYou have %(unapplied_migration_count)s unapplied migration(s). "
@@ -127,7 +127,6 @@ class Command(RunserverCommand):
         Args:
             server_port: The port the server is bound to.
         """
-        self._print_startup_message()
         self._print_startup_banner()
         self._print_server_info(server_port)
 
@@ -151,15 +150,8 @@ class Command(RunserverCommand):
         if not self.no_tailwind_watch:
             self._start_watcher_with_initial_build()
         else:
-            self._build_once()
-
-    def _build_once(self) -> None:
-        """Build Tailwind CSS once without watching.
-
-        Used when --no-tailwind-watch flag is set.
-        """
-        build_handler = BuildHandler(verbose=False)
-        build_handler.build(skip_if_no_source=True)
+            """Build Tailwind CSS once without watching."""
+            BuildHandler(verbose=False).build(skip_if_no_source=True)
 
     def _start_watcher_with_initial_build(self) -> None:
         """Build Tailwind CSS initially, then start watcher in background.
@@ -190,11 +182,6 @@ class Command(RunserverCommand):
             name="TailwindWatcher",
         )
         self._watcher_thread.start()
-        self.stdout.write(self.style.SUCCESS("👀 Tailwind CSS watcher started"))
-
-    def _print_startup_message(self) -> None:
-        """Print initial startup message."""
-        self.stdout.write(self.style.SUCCESS("\n✨ Starting dev server...") + "\n")
 
     def _print_startup_banner(self) -> None:
         """Print ASCII banner based on terminal width.
@@ -203,8 +190,7 @@ class Command(RunserverCommand):
         on whether the terminal is wide enough. Includes warning messages and
         control instructions appropriate for the terminal size.
         """
-        printer = ArtPrinter(self)
-        printer.print_dev_banner()
+        ArtPrinter(self).print_dev_server_banner()
 
     def _print_server_info(self, server_port: int) -> None:
         """Print server and version information.

@@ -1,6 +1,6 @@
-"""Management command: runinstall
+"""Management command: runbuild
 
-Executes install commands.
+Executes build commands.
 Supports dry-run mode for previewing commands before execution
 and continues running remaining commands even if one fails.
 """
@@ -10,33 +10,29 @@ from typing import Any
 from django.core.management.base import BaseCommand, CommandParser
 
 from ..settings import RUNCOMMANDS
-from ..helpers.art import ArtType
-from ..helpers.run import (
-    CommandGenerator,
-    CommandOutput,
-    Output,
-)
+from .helpers.art import ArtType
+from .helpers.run import CommandGenerator, CommandOutput, Output
 
 
-class InstallCommandGenerator(CommandGenerator):
-    """Generator for install command execution."""
+class BuildCommandGenerator(CommandGenerator):
+    """Generator for build command execution."""
 
     def get_runcommands(self) -> list[str]:
-        """Retrieve install commands."""
+        """Retrieve build commands."""
         runcommands_conf = RUNCOMMANDS
-        return runcommands_conf.install
+        return runcommands_conf.build
 
     def create_output_handler(self) -> CommandOutput:
-        """Create the output handler for install commands."""
-        return Output(self.django_command, ArtType.INSTALL)
+        """Create the output handler for build commands."""
+        return Output(self.django_command, ArtType.BUILD)
 
     def get_mode(self) -> str:
-        """Get the mode identifier for install commands."""
-        return "INSTALL"
+        """Get the mode identifier for build commands."""
+        return "BUILD"
 
 
 class Command(BaseCommand):
-    help = "Execute install commands"
+    help = "Execute build commands"
 
     def add_arguments(self, parser: CommandParser) -> None:
         """Define command-line arguments.
@@ -53,9 +49,9 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args: Any, **options: Any) -> None:
-        """Handle the runinstall command execution.
+        """Handle the runbuild command execution.
 
-        Retrieves install commands, validates them,
+        Retrieves build commands, validates them,
         and either displays them (dry-run) or executes them sequentially.
         Continues execution even if individual commands fail.
 
@@ -65,5 +61,5 @@ class Command(BaseCommand):
                 - dry_run (bool): If True, show commands without executing.
         """
         dry_run: bool = options.get("dry_run", False)
-        generator = InstallCommandGenerator(self)
+        generator = BuildCommandGenerator(self)
         generator.generate(dry_run=dry_run)

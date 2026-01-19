@@ -17,7 +17,9 @@ version = "1.5.4"
 description = ""
 readme = "README.md"
 license = { file = "LICENSE" }
-authors = [{ name = "Kevin Wasike Wakhisi", email = "kevin@christianwhocodes.space" }]
+authors = [
+    { name = "Kevin Wasike Wakhisi", email = "kevin@christianwhocodes.space" },
+]
 requires-python = ">=3.12"
 dependencies = [
     "christianwhocodes>=1.2.6",
@@ -36,6 +38,7 @@ dev = [
     "djlint>=1.36.4",
     "pillow>=12.1.0",
     "psycopg[binary,pool]>=3.3.2",
+    "ruff>=0.14.13",
     "vercel>=0.3.7",
 ]
 

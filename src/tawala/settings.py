@@ -1,4 +1,4 @@
-from django.utils.csp import CSP
+from django.utils.csp import CSP  # pyright: ignore[reportMissingTypeStubs]
 
 from .api.settings import *  # noqa: F403
 from .management.settings import *  # noqa: F403

@@ -10,9 +10,9 @@ __pycache__/
 # Distribution folder
 /dist/
 
-# All files in migrations except __init__.py
+# All files mock migration files
 /src/mock/home/migrations/*
 !/src/mock/home/migrations/__init__.py
 
 # Temporary files
-/.tmp/
+/src/tmp/

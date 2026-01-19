@@ -3,14 +3,12 @@ from shutil import get_terminal_size
 
 from django.core.management.base import BaseCommand
 
-from ... import PKG_NAME
-
 
 class ArtType(StrEnum):
     """Enumeration of available ASCII art types."""
 
-    PROG_NAME = PKG_NAME
-    DEV = "dev"
+    RUN = "run"
+    SERVER = "server"
     BUILD = "build"
     INSTALL = "install"
 
@@ -43,7 +41,7 @@ class ArtPrinter:
         self.command = command
         self.terminal_width = get_terminal_size(fallback=(80, 24)).columns
 
-    def _get_prog_name_art(self) -> list[str]:
+    def _get_run_art(self) -> list[str]:
         """Get ASCII art based on terminal width.
 
         Returns:
@@ -52,48 +50,48 @@ class ArtPrinter:
         if self.terminal_width >= TerminalSize.THRESHOLD:
             return [
                 "",
-                "  ██████╗      ██╗ ▄▄▄▄▄  ███╗   ██╗ ██████╗ ██╗  ██╗",
-                "  ██╔══██╗     ██║██╔══██╗████╗  ██║██╔════╝ ╚██╗██╔╝",
-                "  ██║  ██║     ██║███████║██╔██╗ ██║██║  ███╗ ╚███╔╝ ",
-                "  ██║  ██║██   ██║██╔══██║██║╚██╗██║██║   ██║ ██╔██╗ ",
-                "  ██████╔╝╚█████╔╝██║  ██║██║ ╚████║╚██████╔╝██╔╝ ██╗",
-                "  ╚═════╝  ╚════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝",
+                "  ██████╗ ██╗   ██╗███╗   ██╗",
+                "  ██╔══██╗██║   ██║████╗  ██║",
+                "  ██████╔╝██║   ██║██╔██╗ ██║",
+                "  ██╔══██╗██║   ██║██║╚██╗██║",
+                "  ██║  ██║╚██████╔╝██║ ╚████║",
+                "  ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝",
                 "",
             ]
         else:
             return [
                 "",
-                "  █▀▄ ░░█ █▀█ █▄░█ █▀▀ ▀▄▀",
-                "  █▄▀ █▄█ █▀█ █░▀█ █▄█ █░█",
+                "  █▀█ █░█ █▄░█",
+                "  █▀▄ █▄█ █░▀█",
                 "",
             ]
 
-    def _get_dev_art(self) -> list[str]:
-        """Get Dev server ASCII art based on terminal width.
+    def _get_server_art(self) -> list[str]:
+        """Get Server ASCII art based on terminal width.
 
         Returns:
             List of strings representing the ASCII art lines.
         """
-        prog_name_art = self._get_prog_name_art()
+        run_art = self._get_run_art()
 
         if self.terminal_width >= TerminalSize.THRESHOLD:
-            dev_art = [
-                "        ██████╗ ███████╗██╗   ██╗",
-                "        ██╔══██╗██╔════╝██║   ██║",
-                "        ██║  ██║█████╗  ██║   ██║",
-                "        ██║  ██║██╔══╝  ╚██╗ ██╔╝",
-                "        ██████╔╝███████╗ ╚████╔╝ ",
-                "        ╚═════╝ ╚══════╝  ╚═══╝  ",
+            server_art = [
+                "   ███████╗███████╗██████╗ ██╗   ██╗███████╗██████╗ ",
+                "   ██╔════╝██╔════╝██╔══██╗██║   ██║██╔════╝██╔══██╗",
+                "   ███████╗█████╗  ██████╔╝██║   ██║█████╗  ██████╔╝",
+                "   ╚════██║██╔══╝  ██╔══██╗╚██╗ ██╔╝██╔══╝  ██╔══██╗",
+                "   ███████║███████╗██║  ██║ ╚████╔╝ ███████╗██║  ██║",
+                "   ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝",
                 "",
             ]
         else:
-            dev_art = [
-                "       █▀▄ █▀▀ █░█",
-                "       █▄▀ ██▄ ▀▄▀",
+            server_art = [
+                "  █▀ █▀▀ █▀█ █░█ █▀▀ █▀█",
+                "  ▄█ ██▄ █▀▄ ▀▄▀ ██▄ █▀▄",
                 "",
             ]
 
-        return prog_name_art + dev_art
+        return run_art + server_art
 
     def _get_build_art(self) -> list[str]:
         """Get Build ASCII art based on terminal width.
@@ -101,7 +99,7 @@ class ArtPrinter:
         Returns:
             List of strings representing the ASCII art lines.
         """
-        prog_name_art = self._get_prog_name_art()
+        run_art = self._get_run_art()
 
         if self.terminal_width >= TerminalSize.THRESHOLD:
             build_art = [
@@ -120,7 +118,7 @@ class ArtPrinter:
                 "",
             ]
 
-        return prog_name_art + build_art
+        return run_art + build_art
 
     def _get_install_art(self) -> list[str]:
         """Get Install ASCII art based on terminal width.
@@ -128,7 +126,7 @@ class ArtPrinter:
         Returns:
             List of strings representing the ASCII art lines.
         """
-        prog_name_art = self._get_prog_name_art()
+        run_art = self._get_run_art()
 
         if self.terminal_width >= TerminalSize.THRESHOLD:
             install_art = [
@@ -147,7 +145,7 @@ class ArtPrinter:
                 "",
             ]
 
-        return prog_name_art + install_art
+        return run_art + install_art
 
     def _get_art(self, art_type: ArtType) -> list[str]:
         """Get ASCII art lines for the specified type.
@@ -162,8 +160,8 @@ class ArtPrinter:
             ValueError: If an unknown art type is provided.
         """
         art_getters = {
-            ArtType.PROG_NAME: self._get_prog_name_art,
-            ArtType.DEV: self._get_dev_art,
+            ArtType.RUN: self._get_run_art,
+            ArtType.SERVER: self._get_server_art,
             ArtType.BUILD: self._get_build_art,
             ArtType.INSTALL: self._get_install_art,
         }
@@ -208,18 +206,18 @@ class ArtPrinter:
 
         self.command.stdout.write("")
 
-    def print_dev_banner(self) -> None:
+    def print_dev_server_banner(self) -> None:
         """Print the development server banner."""
         if self.terminal_width >= TerminalSize.THRESHOLD:
             self._print_banner(
-                art_type=ArtType.DEV,
+                art_type=ArtType.SERVER,
                 title="         🔥  Development Server  🔥",
                 subtitle="       ⚠️  Not suitable for production!  ⚠️",
                 notice="             Press Ctrl-C to quit",
             )
         else:
             self._print_banner(
-                art_type=ArtType.DEV,
+                art_type=ArtType.SERVER,
                 title="    🔥  Dev Server  🔥",
                 subtitle="  ⚠️   Not for production! ⚠️",
                 notice="       Ctrl-C to quit",

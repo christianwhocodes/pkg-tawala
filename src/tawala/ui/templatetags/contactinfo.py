@@ -1,26 +1,9 @@
-from typing import Literal, TypeAlias
+from typing import Literal
 
 from django import template
 
 from ..settings import CONTACTINFO_ADDRESS, CONTACTINFO_EMAIL, CONTACTINFO_PHONE
-
-ContactAddressKey: TypeAlias = Literal[
-    "country",
-    "state",
-    "city",
-    "street",
-]
-
-ContactEmailKey: TypeAlias = Literal[
-    "primary",
-    "additional",
-]
-
-ContactPhoneKey: TypeAlias = Literal[
-    "primary",
-    "additional",
-]
-
+from ..types import ContactAddressKey, ContactEmailKey, ContactPhoneKey
 
 register = template.Library()
 

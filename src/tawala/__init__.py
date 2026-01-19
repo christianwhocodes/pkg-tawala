@@ -3,7 +3,7 @@ import importlib.util
 import pathlib
 import sys
 from os import environ
-from typing import Any, NoReturn, Optional, TypeAlias
+from typing import Any, NoReturn, Optional, TypeAlias, cast
 
 from christianwhocodes.utils import ExitCode, PyProject, Text, TypeConverter, print
 from dotenv import dotenv_values
@@ -257,7 +257,7 @@ class Conf:
         current: Any = self._toml
         for k in key.split("."):
             if isinstance(current, dict) and k in current:
-                current = current[k]
+                current = cast(Any, current[k])
             else:
                 return None
 

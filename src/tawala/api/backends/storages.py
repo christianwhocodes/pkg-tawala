@@ -1,9 +1,7 @@
-from typing import Optional
-
 from django.core.files.base import ContentFile, File
 from django.core.files.storage import Storage
 from django.utils.deconstruct import deconstructible
-from vercel.blob import BlobClient
+from vercel.blob import BlobClient  # pyright: ignore[reportMissingTypeStubs]
 
 from ..settings import BLOB_READ_WRITE_TOKEN
 
@@ -77,7 +75,7 @@ class VercelBlobStorage(Storage):
         """Return a filename suitable for use with the storage system"""
         return name
 
-    def get_available_name(self, name: str, max_length: Optional[int] = None) -> str:
+    def get_available_name(self, name: str, max_length: int | None = None) -> str:
         """Return a filename that's free on the storage system"""
         # Vercel Blob handles uniqueness with add_random_suffix
         return name
